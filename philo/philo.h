@@ -17,24 +17,27 @@
 
 typedef struct s_data
 {
-	int	philo_sum;
-	int	t2_eat;
-	int	t2_die;
-	int	t2_sleep;
-	int	alll_alive;
-	int	all_ate;
-	pthread_mutex_t	*forks;
-
+	int				philo_sum;
+	int				t2_eat;
+	int				t2_die;
+	pthread_mutex_t	saba;
+	long long		deadline;
+	int				t2_sleep;
+	int				nbr_meals;
+	int				alll_alive;
+	long long		start;
+	int				all_ate;
 }	t_data;
 
 typedef struct s_philo
 {
-	int		id;
-	int		l_fork;
-	int		r_fork;
-	int		last_meal;
-	t_data	thread_dtls;
-
+	int				id;
+	pthread_mutex_t	l_fork;
+	pthread_mutex_t	*r_fork;
+	long long		current_time;
+	int				meals_c;
+	pthread_t		thread;
+	t_data			*data;
 }	t_philo;
 
 /****************************************************************/
@@ -52,6 +55,8 @@ typedef struct s_philo
 
 int		ft_strlen(char *s);
 void	ft_putendl_fd(char *s, int fd);
+int	ft_atoi(const char *str);
+int	test_limits(int ac, char **av);
 
 /****************************************************************/
 

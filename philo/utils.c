@@ -18,6 +18,12 @@ void	ft_putendl_fd(char *s, int fd)
 	write (fd, "\n", 1);
 }
 
+int	ft_isdigit(int c)
+{
+	return (c >= '0' && c <= '9');
+}
+
+
 int	ft_atoi(const char *str)
 {
 	long	nbr;

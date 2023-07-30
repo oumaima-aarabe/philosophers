@@ -10,13 +10,13 @@ OBJ	=	${SRC:.c=.o}
 INC		=	philo.h
 
 CC			=	cc
-CFLAGS		=	-Wall -Wextra -Werror -fsanitize=address
+CFLAGS		=	 -fsanitize=address
 RM			=	rm -rf
 
 all: $(UTILS) $(NAME)
 
 $(NAME): $(OBJ) $(INC)
-	@ $(CC) $(CFLAGS) -o $@ $(OBJ)
+	@ $(CC) $(CFLAGS) -o $@  $(OBJ)
 
 %.o: %.c $(INC)
 	@ $(CC) $(CFLAGS) -c $< -o $@
