@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <sys/time.h>
 #include <stdbool.h>
+#include <limits.h>
 
 /****************************************************************/
 /************************STRUCTS*********************************/
@@ -21,12 +22,14 @@ typedef struct s_data
 	int				t2_eat;
 	int				t2_die;
 	pthread_mutex_t	saba;
+	pthread_mutex_t	sabato;
 	long long		deadline;
 	int				t2_sleep;
 	int				nbr_meals;
 	int				alll_alive;
 	long long		start;
 	int				all_ate;
+	void			*state;
 }	t_data;
 
 typedef struct s_philo
