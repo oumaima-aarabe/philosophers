@@ -15,71 +15,104 @@ void	my_usleep(int t)
 	while(gettime() < dl)
 		usleep(100);
 }
-int	death_check(t_philo *philo)
-{
-	int status;
-	pthread_mutex_lock(&philo->data->saba);
-	if(!philo->data->alll_alive)
-	{
 
-		pthread_mutex_unlock(&philo->data->saba);
+int	death_check(t_philo *ph)
+{
+	int status = 1;
+	pthread_mutex_lock(&ph->data->saba);
+	if(!ph->data->alll_alive)
+	{
+		pthread_mutex_unlock(&ph->data->saba);
 		return (0);
 	}
-	if(!(status = gettime() < philo->data->deadline))
-		philo->data->alll_alive = 0;
-	pthread_mutex_unlock(&philo->data->saba);
+	if(gettime() >= ph->data->deadline)
+	{
+		status = 0;
+		ph->data->alll_alive = 0;
+			printf("%lld philo %d has died\n",gettime() - ph->data->start, ph->id);
+
+	}
+	pthread_mutex_unlock(&ph->data->saba);
 	return (status);
 }
+
 void	*ham_ham(t_philo *philo)
 {
-	if(!death_check(philo))
-		return("dead");
 	pthread_mutex_lock(&philo->l_fork);
 	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
+	if(!death_check(philo))
+		return("dead");
 	pthread_mutex_lock(philo->r_fork);
 	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
 	pthread_mutex_lock(&philo->data->saba);
 	philo->data->deadline = gettime() + philo->data->t2_die;
 	philo->meals_c++;
 	pthread_mutex_unlock(&philo->data->saba);
-	if(!death_check(philo))
-		return("dead");
+	// if(!death_check(philo->data))
+	// 	return("dead");
 	printf("%lld philo %d is eating\n",gettime() - philo->data->start, philo->id);
 	my_usleep(philo->data->t2_eat);
 	pthread_mutex_unlock(&philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
 	printf("%lld philo %d is sleeping\n",gettime() - philo->data->start, philo->id);
 	my_usleep(philo->data->t2_sleep);
-	if(!death_check(philo))
-		return("dead");
+	// if(!death_check(philo->data))
+	// 	return("dead");
 	printf("%lld philo %d is thinking\n",gettime() - philo->data->start, philo->id);
 	return(NULL);
 }
 
-void	overseer(t_philo *philo)
+void	overseer(t_philo *ph)
 {
-	while(philo->data->alll_alive)
+	int i = 0;
+	int sum = ph[0].data->philo_sum;
+	while ("ghayboba")
 	{
-		if(!death_check(philo))
+		 i = 0;
+		while (i < sum)
 		{
-			if (!philo->data->alll_alive)
+
+			if(!death_check(&ph[i]))
+			{
+				if (!ph[i].data->alll_alive)
+					return;
+				ph[i].data->alll_alive = 0;
+				// printf("%lld philo %d has died\n",gettime() - philo->data->start, philo->id);
 				return;
-			philo->data->alll_alive = 0;
-			// printf("%lld philo %d has died\n",gettime() - philo->data->start, philo->id);
-			return;
+			}
+			i++;
 		}
+		usleep(100);
 	}
+
+
 }
+// void	*overseer(t_philo *philo)
+// {
+// 	while(philo->data->alll_alive)
+// 	{
+// 		if(!death_check(philo))
+// 		{
+// 			if (!philo->data->alll_alive)
+// 				return("dead");
+// 			philo->data->alll_alive = 0;
+// 			// printf("%lld philo %d has died\n",gettime() - philo->data->start, philo->id);
+// 			return("dead");
+// 		}
+// 	}
+// 	return(NULL);
+
+// }
 void	*routine(t_philo *philo)
 {
 	if (!((philo->id ) % 2))
 		my_usleep(philo->data->t2_eat);
-	philo->data->deadline = LLONG_MAX;
+	philo->data->deadline = philo->data->start + philo->data->t2_die;
 	// philo->current_time = gettime();
-	// pthread_create(&philo->thread, NULL, (void *)overseer, &philo);
-	while (1)
+	while ("ghayboba")
 	{
-		// if(!death_check(philo))
+		if(!death_check(philo))
+			break ;
 		if(ham_ham(philo))
 			return ("dead");
 
@@ -120,25 +153,19 @@ int main(int ac, char **av)
 		ph[i + 1].r_fork = &ph[i].l_fork;
 		i++;
 	}
+	data.start  = gettime();
 	i = -1;
-	data.start = gettime();
 	while (++i < data.philo_sum)
 	{
 		pthread_create(&ph[i].thread, NULL, (void *)routine, &ph[i]);
-		usleep(100);
+		// usleep(100);
 	}
+	overseer(ph);
 	i = -1;
 	while (++i < data.philo_sum)
 	{
-		pthread_mutex_lock(&ph[i].data->sabato);
 		pthread_join(ph[i].thread, &ph[i].data->state);
-		if (ph[i].data->state)
-		{	
-
-			pthread_mutex_unlock(&ph[i].data->sabato);
-			printf("%lld philo %d has died\n",gettime() - ph[i].data->start, i + 1);
-			break;
-		}
-		pthread_mutex_unlock(&ph[i].data->sabato);
+		// if (ph[i].data->state)
+			// printf("%lld philo %d has died\n",gettime() - ph[i].data->start, i + 1);
 	}
 }
