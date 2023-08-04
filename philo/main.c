@@ -25,39 +25,54 @@ int	death_check(t_philo *ph)
 		pthread_mutex_unlock(&ph->data->saba);
 		return (0);
 	}
-	if(gettime() >= ph->data->deadline)
+	printf ("%lld == %lld\n", gettime()- ph->data->start ,ph->deadline - ph->data->start);
+	if(gettime() >= ph->deadline)
 	{
 		status = 0;
 		ph->data->alll_alive = 0;
 			printf("%lld philo %d has died\n",gettime() - ph->data->start, ph->id);
 
-	}
+	} 
 	pthread_mutex_unlock(&ph->data->saba);
 	return (status);
+}
+int	death_check_var(t_philo *ph)
+{
+	pthread_mutex_lock(&ph->data->saba);
+	if(!ph->data->alll_alive)
+	{
+		pthread_mutex_unlock(&ph->data->saba);
+		return (0);
+	}
+	pthread_mutex_unlock(&ph->data->saba);
+	return (1);
 }
 
 void	*ham_ham(t_philo *philo)
 {
+	// puts("here");
 	pthread_mutex_lock(&philo->l_fork);
 	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
-	if(!death_check(philo))
+	if(!death_check_var(philo))
 		return("dead");
 	pthread_mutex_lock(philo->r_fork);
 	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
+	if(!death_check_var(philo))
+		return("dead");
 	pthread_mutex_lock(&philo->data->saba);
-	philo->data->deadline = gettime() + philo->data->t2_die;
+	philo->deadline = gettime() + philo->data->t2_die;
 	philo->meals_c++;
 	pthread_mutex_unlock(&philo->data->saba);
-	// if(!death_check(philo->data))
-	// 	return("dead");
 	printf("%lld philo %d is eating\n",gettime() - philo->data->start, philo->id);
 	my_usleep(philo->data->t2_eat);
 	pthread_mutex_unlock(&philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
+	if(!death_check_var(philo))
+		return("dead");
 	printf("%lld philo %d is sleeping\n",gettime() - philo->data->start, philo->id);
 	my_usleep(philo->data->t2_sleep);
-	// if(!death_check(philo->data))
-	// 	return("dead");
+	if(!death_check_var(philo))
+		return("dead");
 	printf("%lld philo %d is thinking\n",gettime() - philo->data->start, philo->id);
 	return(NULL);
 }
@@ -71,15 +86,8 @@ void	overseer(t_philo *ph)
 		 i = 0;
 		while (i < sum)
 		{
-
 			if(!death_check(&ph[i]))
-			{
-				if (!ph[i].data->alll_alive)
 					return;
-				ph[i].data->alll_alive = 0;
-				// printf("%lld philo %d has died\n",gettime() - philo->data->start, philo->id);
-				return;
-			}
 			i++;
 		}
 		usleep(100);
@@ -107,7 +115,7 @@ void	*routine(t_philo *philo)
 {
 	if (!((philo->id ) % 2))
 		my_usleep(philo->data->t2_eat);
-	philo->data->deadline = philo->data->start + philo->data->t2_die;
+	philo->deadline = philo->data->start + philo->data->t2_die;
 	// philo->current_time = gettime();
 	while ("ghayboba")
 	{

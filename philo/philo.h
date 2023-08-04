@@ -23,7 +23,6 @@ typedef struct s_data
 	int				t2_die;
 	pthread_mutex_t	saba;
 	pthread_mutex_t	sabato;
-	long long		deadline;
 	int				t2_sleep;
 	int				nbr_meals;
 	int				alll_alive;
@@ -38,6 +37,7 @@ typedef struct s_philo
 	pthread_mutex_t	l_fork;
 	pthread_mutex_t	*r_fork;
 	long long		current_time;
+	long long		deadline;
 	int				meals_c;
 	pthread_t		thread;
 	t_data			*data;
