@@ -22,7 +22,7 @@ typedef struct s_data
 	int				t2_eat;
 	int				t2_die;
 	pthread_mutex_t	saba;
-	pthread_mutex_t	sabato;
+	pthread_mutex_t	printing;
 	int				t2_sleep;
 	int				nbr_meals;
 	int				alll_alive;
@@ -45,7 +45,9 @@ typedef struct s_philo
 
 /****************************************************************/
 /************************ROUTINE_FUNCTIONS************************/
-
+void    *manage_print(t_philo *philo, int action);
+long long gettime();
+void	my_usleep(int t);
 /****************************************************************/
 /************************INIT_FUNCTIONS**************************/
 

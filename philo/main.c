@@ -1,22 +1,6 @@
 #include "philo.h"
 
-long long gettime()
-{
-	struct timeval	t;
-
-	gettimeofday(&t, NULL);
-	return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
-}
-
-void	my_usleep(int t)
-{
-	long long	dl;
-	dl = gettime() + t;
-	while(gettime() < dl)
-		usleep(100);
-}
-
-int	death_check(t_philo *ph)
+int	death_check(t_philo *ph, long long start)
 {
 	int status = 1;
 	pthread_mutex_lock(&ph->data->saba);
@@ -25,8 +9,8 @@ int	death_check(t_philo *ph)
 		pthread_mutex_unlock(&ph->data->saba);
 		return (0);
 	}
-	printf ("%lld == %lld\n", gettime()- ph->data->start ,ph->deadline - ph->data->start);
-	if(gettime() >= ph->deadline)
+	usleep(1);
+	if(start > ph->deadline)
 	{
 		status = 0;
 		ph->data->alll_alive = 0;
@@ -50,30 +34,26 @@ int	death_check_var(t_philo *ph)
 
 void	*ham_ham(t_philo *philo)
 {
-	// puts("here");
 	pthread_mutex_lock(&philo->l_fork);
-	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
-	if(!death_check_var(philo))
+	if(manage_print(philo, 1))
 		return("dead");
 	pthread_mutex_lock(philo->r_fork);
-	printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
-	if(!death_check_var(philo))
+	if(manage_print(philo, 1))
 		return("dead");
 	pthread_mutex_lock(&philo->data->saba);
 	philo->deadline = gettime() + philo->data->t2_die;
 	philo->meals_c++;
 	pthread_mutex_unlock(&philo->data->saba);
-	printf("%lld philo %d is eating\n",gettime() - philo->data->start, philo->id);
+	if(manage_print(philo, 2))
+		return("dead");
 	my_usleep(philo->data->t2_eat);
 	pthread_mutex_unlock(&philo->l_fork);
 	pthread_mutex_unlock(philo->r_fork);
-	if(!death_check_var(philo))
+	if(manage_print(philo, 3))
 		return("dead");
-	printf("%lld philo %d is sleeping\n",gettime() - philo->data->start, philo->id);
 	my_usleep(philo->data->t2_sleep);
-	if(!death_check_var(philo))
+	if(manage_print(philo, 4))
 		return("dead");
-	printf("%lld philo %d is thinking\n",gettime() - philo->data->start, philo->id);
 	return(NULL);
 }
 
@@ -84,9 +64,10 @@ void	overseer(t_philo *ph)
 	while ("ghayboba")
 	{
 		 i = 0;
+		long long start = gettime();
 		while (i < sum)
 		{
-			if(!death_check(&ph[i]))
+			if(!death_check(&ph[i], start))
 					return;
 			i++;
 		}
@@ -95,35 +76,20 @@ void	overseer(t_philo *ph)
 
 
 }
-// void	*overseer(t_philo *philo)
-// {
-// 	while(philo->data->alll_alive)
-// 	{
-// 		if(!death_check(philo))
-// 		{
-// 			if (!philo->data->alll_alive)
-// 				return("dead");
-// 			philo->data->alll_alive = 0;
-// 			// printf("%lld philo %d has died\n",gettime() - philo->data->start, philo->id);
-// 			return("dead");
-// 		}
-// 	}
-// 	return(NULL);
 
-// }
 void	*routine(t_philo *philo)
 {
+	pthread_mutex_lock(&philo->data->saba);
+	philo->deadline = gettime() + philo->data->t2_die;
+	pthread_mutex_unlock(&philo->data->saba);
 	if (!((philo->id ) % 2))
 		my_usleep(philo->data->t2_eat);
-	philo->deadline = philo->data->start + philo->data->t2_die;
-	// philo->current_time = gettime();
 	while ("ghayboba")
 	{
-		if(!death_check(philo))
+		if(!death_check_var(philo))
 			break ;
 		if(ham_ham(philo))
 			return ("dead");
-
 	}
 	return(NULL);
 }
@@ -145,7 +111,6 @@ int main(int ac, char **av)
 		data.nbr_meals = ft_atoi(av[5]);
 	int i = 0;
 	pthread_mutex_init(&data.saba, NULL);
-	pthread_mutex_init(&data.sabato, NULL);
 	t_philo	ph[200];
 	while (i < data.philo_sum)
 	{
@@ -166,13 +131,13 @@ int main(int ac, char **av)
 	while (++i < data.philo_sum)
 	{
 		pthread_create(&ph[i].thread, NULL, (void *)routine, &ph[i]);
-		// usleep(100);
+		usleep(100);
 	}
 	overseer(ph);
 	i = -1;
 	while (++i < data.philo_sum)
 	{
-		pthread_join(ph[i].thread, &ph[i].data->state);
+		pthread_join(ph[i].thread, NULL);
 		// if (ph[i].data->state)
 			// printf("%lld philo %d has died\n",gettime() - ph[i].data->start, i + 1);
 	}
