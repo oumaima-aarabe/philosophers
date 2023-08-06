@@ -19,10 +19,10 @@ void	my_usleep(int t)
 void    *manage_print(t_philo *philo, int action)
 {
 	pthread_mutex_lock(&philo->data->saba);
-    if(!philo->data->alll_alive)
+    if(!philo->data->alll_alive || philo->data->all_ate)
 	{
 		pthread_mutex_unlock(&philo->data->saba);
-		return ("dead");
+		return ("done");
 	}
     if(action == 1)
 	    printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);

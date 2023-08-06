@@ -22,7 +22,6 @@ typedef struct s_data
 	int				t2_eat;
 	int				t2_die;
 	pthread_mutex_t	saba;
-	pthread_mutex_t	printing;
 	int				t2_sleep;
 	int				nbr_meals;
 	int				alll_alive;
@@ -41,6 +40,7 @@ typedef struct s_philo
 	int				meals_c;
 	pthread_t		thread;
 	t_data			*data;
+	int				checked;
 }	t_philo;
 
 /****************************************************************/
