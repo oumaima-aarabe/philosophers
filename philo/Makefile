@@ -2,7 +2,7 @@ NAME = philo
 
 SRC	=	main.c\
 		manage_print.c\
-		philo.c\
+		philo_init.c\
 		utils.c
 	
 OBJ	=	${SRC:.c=.o}
@@ -10,7 +10,7 @@ OBJ	=	${SRC:.c=.o}
 INC		=	philo.h
 
 CC			=	cc
-CFLAGS		= #-fsanitize=thread
+CFLAGS		= -fsanitize=address
 RM			=	rm -rf
 
 all: $(UTILS) $(NAME)

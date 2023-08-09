@@ -24,7 +24,7 @@ int	ft_isdigit(int c)
 }
 
 
-int	ft_atoi(const char *str)
+int	ft_atoi(char *str)
 {
 	long	nbr;
 	int		sign;
@@ -41,10 +41,12 @@ int	ft_atoi(const char *str)
 			sign *= -1;
 		i++;
 	}
-	while (ft_isdigit(str[i]))
+	while (str[i] && ft_isdigit(str[i]))
 	{
 		nbr = nbr * 10 + (str[i] - 48);
 		i++;
 	}
+	if(str[i])
+		return(0);
 	return (sign * nbr);
 }

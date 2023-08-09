@@ -60,9 +60,9 @@ void	my_usleep(int t);
 
 int		ft_strlen(char *s);
 void	ft_putendl_fd(char *s, int fd);
-int	ft_atoi(const char *str);
-int	test_limits(int ac, char **av);
-
+int	ft_atoi(char *str);
+int	init_data(int ac, char **av, t_data *data);
+int	init_philo(t_data data, t_philo *ph);
 /****************************************************************/
 
 #endif

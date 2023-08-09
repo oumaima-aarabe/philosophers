@@ -110,10 +110,7 @@ void	overseer(t_philo *ph)
 			if(!death_check(&ph[i], start))
 				return;
 			if (meal_counter_check(&ph[i], &status))
-			{
 				return ;
-			}
-				// puts("here");
 			i++;
 		}
 		usleep(100);
@@ -140,36 +137,19 @@ void	routine(t_philo *philo)
 int main(int ac, char **av)
 {
 	t_data data;
-	if (ac < 5 || ac > 7)
-		ft_putendl_fd("wrong number of args!", 2);
-	if (test_limits(ac, av))
-		return (1);
-	data.philo_sum = ft_atoi(av[1]);
-	data.t2_die = ft_atoi(av[2]);
-	data.t2_eat = ft_atoi(av[3]);
-	data.t2_sleep = ft_atoi(av[4]);
-	data.nbr_meals = -1;
-	data.alll_alive = 1;
-	data.all_ate = 0;
-	if (ac == 6)
-		data.nbr_meals = ft_atoi(av[5]);
-	int i = 0;
-	pthread_mutex_init(&data.saba, NULL);
+	int i;
 	t_philo	ph[200];
-	while (i < data.philo_sum)
+
+	if (init_data(ac, av, &data))
 	{
-		ph[i].meals_c = 0;
-		ph[i].checked = 0;
-		ph[i].data = &data;
-		ph[i].id = i + 1;
-		pthread_mutex_init(&ph[i++].l_fork, NULL);
+		ft_putendl_fd("invalid args", 2);
+		return (1);
 	}
-	ph[0].r_fork = &ph[data.philo_sum - 1].l_fork;
-	i = 0;
-	while (i < data.philo_sum - 1)
+	pthread_mutex_init(&data.saba, NULL);
+	if (init_philo(data, ph))
 	{
-		ph[i + 1].r_fork = &ph[i].l_fork;
-		i++;
+		ft_putendl_fd("mutex failed", 2);
+		return (1);
 	}
 	data.start  = gettime();
 	i = -1;
@@ -179,11 +159,8 @@ int main(int ac, char **av)
 		usleep(100);
 	}
 	overseer(ph);
+	printf("frh\n");
 	i = -1;
 	while (++i < data.philo_sum)
-	{
 		pthread_join(ph[i].thread, NULL);
-		// if (ph[i].data->state)
-			// printf("%lld philo %d has died\n",gettime() - ph[i].data->start, i + 1);
-	}
 }
