@@ -141,26 +141,20 @@ int main(int ac, char **av)
 	t_philo	ph[200];
 
 	if (init_data(ac, av, &data))
-	{
-		ft_putendl_fd("invalid args", 2);
-		return (1);
-	}
+		return (manage_errors(1), 1);
 	pthread_mutex_init(&data.saba, NULL);
-	if (init_philo(data, ph))
-	{
-		ft_putendl_fd("mutex failed", 2);
-		return (1);
-	}
-	data.start  = gettime();
-	i = -1;
-	while (++i < data.philo_sum)
-	{
-		pthread_create(&ph[i].thread, NULL, (void *)routine, &ph[i]);
-		usleep(100);
-	}
+	if (init_philo(&data, ph))
+		return (pthread_mutex_destroy(&data.saba), manage_errors(2), 1);
 	overseer(ph);
-	printf("frh\n");
 	i = -1;
 	while (++i < data.philo_sum)
 		pthread_join(ph[i].thread, NULL);
+	
+	i = -1;
+	pthread_mutex_destroy(&data.saba);
+	while (++i < data.philo_sum)
+	{
+		pthread_detach(ph[i].thread);
+		pthread_mutex_destroy(&ph[i].l_fork);
+	}
 }

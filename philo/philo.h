@@ -48,12 +48,13 @@ typedef struct s_philo
 void    *manage_print(t_philo *philo, int action);
 long long gettime();
 void	my_usleep(int t);
+void	routine(t_philo *philo);
 /****************************************************************/
 /************************INIT_FUNCTIONS**************************/
 
 /****************************************************************/
 /************************ERROR_MANAGE_FUNCS**********************/
-
+void manage_errors(int c);
 
 /****************************************************************/
 /************************UTILS_FUNTIONS**************************/
@@ -62,7 +63,7 @@ int		ft_strlen(char *s);
 void	ft_putendl_fd(char *s, int fd);
 int	ft_atoi(char *str);
 int	init_data(int ac, char **av, t_data *data);
-int	init_philo(t_data data, t_philo *ph);
+int	init_philo(t_data *data, t_philo *ph);
 /****************************************************************/
 
 #endif

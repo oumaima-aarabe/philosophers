@@ -25,14 +25,26 @@ void    *manage_print(t_philo *philo, int action)
 		return ("done");
 	}
     if(action == 1)
-	    printf("%lld philo %d has taken a fork\n",gettime() - philo->data->start, philo->id);
+	    printf("%lld philo %d has taken a fork\n",gettime() \
+		- philo->data->start, philo->id);
     else if (action == 2)
-	    printf("%lld philo %d is eating\n",gettime() - philo->data->start, philo->id);
+	    printf("%lld philo %d is eating\n",gettime() \
+		- philo->data->start, philo->id);
     else if (action == 3)
-	    printf("%lld philo %d is sleeping\n",gettime() - philo->data->start, philo->id);
+	    printf("%lld philo %d is sleeping\n",gettime() \
+		- philo->data->start, philo->id);
     else if (action == 4)
-	    printf("%lld philo %d is thinking\n",gettime() - philo->data->start, philo->id);
+	    printf("%lld philo %d is thinking\n",gettime() \
+		- philo->data->start, philo->id);
 	pthread_mutex_unlock(&philo->data->saba);
     return(NULL);
     
+}
+
+void manage_errors(int c)
+{
+	if(c == 1)
+		ft_putendl_fd("invalid args", 2);
+	if(c == 2)
+		ft_putendl_fd("thread creation failed", 2);
 }
