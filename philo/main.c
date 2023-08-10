@@ -1,33 +1,41 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 05:15:49 by ouaarabe          #+#    #+#             */
+/*   Updated: 2023/08/10 06:13:45 by ouaarabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
 int	death_check(t_philo *ph, long long start)
 {
 	int status = 1;
-	pthread_mutex_lock(&ph->data->saba);
-	if(!ph->data->alll_alive)
-	{
-		pthread_mutex_unlock(&ph->data->saba);
+	if (pthread_mutex_lock(&ph->data->saba))
 		return (0);
-	}
+	if(!ph->data->alll_alive)
+		return (pthread_mutex_unlock(&ph->data->saba), 0);
 	usleep(1);
-	if(start > ph->deadline)
+	if(!ph->eet && start > ph->deadline)
 	{
 		status = 0;
 		ph->data->alll_alive = 0;
 		printf("%lld philo %d has died\n",gettime() - ph->data->start, ph->id);
-
-	} 
-	pthread_mutex_unlock(&ph->data->saba);
-	return (status);
+	}
+	return (pthread_mutex_unlock(&ph->data->saba), status);
 }
 
 int	meal_counter_check(t_philo *ph, int *status)
 {
-	int i = -1;
 	int sum = ph->data->philo_sum;
 	int nbr_m = ph->data->nbr_meals;
 
-	pthread_mutex_lock(&ph->data->saba);
+	if(pthread_mutex_lock(&ph->data->saba))
+		return(1);
 	if (ph->data->all_ate)
 		return (pthread_mutex_unlock(&ph->data->saba), 1);
 	if (ph->meals_c == nbr_m && !ph->checked)
@@ -38,56 +46,63 @@ int	meal_counter_check(t_philo *ph, int *status)
 	else if (ph->meals_c != nbr_m)
 		return(pthread_mutex_unlock(&ph->data->saba), 0);
 	if (*status == sum)
-	{
 		ph->data->all_ate = 1;
-	}
-		// printf("status %d: %d \n", ph->id, *status);
-	pthread_mutex_unlock(&ph->data->saba);
-	return(*status == sum);
+	return(pthread_mutex_unlock(&ph->data->saba), *status == sum);
 }
 
 int	mcc_var(t_philo *ph)
 {
-	pthread_mutex_lock(&ph->data->saba);
-		// puts("here");
+	if(pthread_mutex_lock(&ph->data->saba))
+		return(1);
 	if(ph->data->all_ate)
-	{
-		pthread_mutex_unlock(&ph->data->saba);
-		return (1);
-	}
-	pthread_mutex_unlock(&ph->data->saba);
-	return (0);
+		return (pthread_mutex_unlock(&ph->data->saba), 1);
+	return (pthread_mutex_unlock(&ph->data->saba), 0);
 }
 
 int	death_check_var(t_philo *ph)
 {
-	pthread_mutex_lock(&ph->data->saba);
+	if(pthread_mutex_lock(&ph->data->saba))
+		return(0);
 	if(!ph->data->alll_alive)
-	{
-		pthread_mutex_unlock(&ph->data->saba);
-		return (0);
-	}
-	pthread_mutex_unlock(&ph->data->saba);
-	return (1);
+		return (pthread_mutex_unlock(&ph->data->saba), 0);
+	return (pthread_mutex_unlock(&ph->data->saba), 1);
 }
 
+
+void	update_data(t_philo *ph)
+{
+	if(pthread_mutex_lock(&ph->data->saba))
+        return;
+	if (!ph->eet)
+	{
+		ph->deadline = gettime() + ph->data->t2_die;
+		ph->meals_c++;
+		ph->eet = true;	
+	}
+	else if(ph->eet)
+		ph->eet = false;
+    pthread_mutex_unlock(&ph->data->saba);
+}
 void	*ham_ham(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->l_fork);
+	if(pthread_mutex_lock(&philo->l_fork))
+		return(NULL);
 	if (manage_print(philo, 1))
 		return ("done");
-	pthread_mutex_lock(philo->r_fork);
+	if(philo->data->philo_sum == 1)
+		return (pthread_mutex_unlock(&philo->l_fork), "done");
+	if(pthread_mutex_lock(philo->r_fork))
+		return(NULL);
 	if (manage_print(philo, 1))
 		return ("done");
-	pthread_mutex_lock(&philo->data->saba);
-	philo->deadline = gettime() + philo->data->t2_die;
-	philo->meals_c++;
-	pthread_mutex_unlock(&philo->data->saba);
+	update_data(philo);
 	if (manage_print(philo, 2))
 		return ("done");
 	my_usleep(philo->data->t2_eat);
-	pthread_mutex_unlock(&philo->l_fork);
-	pthread_mutex_unlock(philo->r_fork);
+	update_data(philo);
+	if(pthread_mutex_unlock(&philo->l_fork) ||\
+	pthread_mutex_unlock(philo->r_fork))
+        return (NULL);
 	if (manage_print(philo, 3))
 		return ("done");
 	my_usleep(philo->data->t2_sleep);
@@ -119,7 +134,8 @@ void	overseer(t_philo *ph)
 
 void	routine(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->data->saba);
+	if (pthread_mutex_lock(&philo->data->saba))
+		return ;
 	philo->deadline = gettime() + philo->data->t2_die;
 	pthread_mutex_unlock(&philo->data->saba);
 	if (!((philo->id ) % 2))
@@ -142,9 +158,14 @@ int main(int ac, char **av)
 
 	if (init_data(ac, av, &data))
 		return (manage_errors(1), 1);
-	pthread_mutex_init(&data.saba, NULL);
-	if (init_philo(&data, ph))
+	if (pthread_mutex_init(&data.saba, NULL))
+		return (manage_errors(3), 1);
+	if (init_philo(&data, ph, &i))
+	{
+		while (i--)
+			pthread_mutex_destroy(&ph[i].l_fork);
 		return (pthread_mutex_destroy(&data.saba), manage_errors(2), 1);
+	}
 	overseer(ph);
 	i = -1;
 	while (++i < data.philo_sum)
@@ -153,8 +174,5 @@ int main(int ac, char **av)
 	i = -1;
 	pthread_mutex_destroy(&data.saba);
 	while (++i < data.philo_sum)
-	{
-		pthread_detach(ph[i].thread);
 		pthread_mutex_destroy(&ph[i].l_fork);
-	}
 }

@@ -10,7 +10,7 @@ OBJ	=	${SRC:.c=.o}
 INC		=	philo.h
 
 CC			=	cc
-CFLAGS		= -fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -fsanitize=thread
 RM			=	rm -rf
 
 all: $(UTILS) $(NAME)

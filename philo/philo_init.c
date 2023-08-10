@@ -37,23 +37,24 @@ void	init_forks(t_philo *ph, t_data data)
 	}
 }
 
-int	init_philo(t_data *data, t_philo *ph)
+int	init_philo(t_data *data, t_philo *ph, int *i)
 {
-	int i = 0;
-	while (i < data->philo_sum)
-		if (pthread_mutex_init(&ph[i++].l_fork, NULL))
+	*i = 0;
+	while (*i < data->philo_sum)
+		if (pthread_mutex_init(&ph[(*i)++].l_fork, NULL))
 			return(1);
 	init_forks(ph, *data);
 	data->start  = gettime();
-	i = -1;
-	while (++i < data->philo_sum)
+	*i = -1;
+	while (++(*i) < data->philo_sum)
 	{
-		ph[i].meals_c = 0;
-		ph[i].checked = 0;
-		ph[i].data = data;
-		ph[i].id = i + 1;
-		if(pthread_create(&ph[i].thread, NULL, (void *)routine, &ph[i]))
-			return(1);
+		ph[*i].meals_c = 0;
+		ph[*i].checked = 0;
+		ph[*i].data = data;
+		ph[*i].id = *i + 1;
+		ph[*i].eet = false;
+		if(pthread_create(&ph[*i].thread, NULL, (void *)routine, &ph[*i]))
+			return(*i = data->philo_sum, 1);
 		usleep(100);
 	}
 	return (0);

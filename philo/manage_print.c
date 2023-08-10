@@ -18,12 +18,10 @@ void	my_usleep(int t)
 
 void    *manage_print(t_philo *philo, int action)
 {
-	pthread_mutex_lock(&philo->data->saba);
+	if(pthread_mutex_lock(&philo->data->saba))
+		return(NULL);
     if(!philo->data->alll_alive || philo->data->all_ate)
-	{
-		pthread_mutex_unlock(&philo->data->saba);
-		return ("done");
-	}
+		return (pthread_mutex_unlock(&philo->data->saba), "done");
     if(action == 1)
 	    printf("%lld philo %d has taken a fork\n",gettime() \
 		- philo->data->start, philo->id);
@@ -33,11 +31,10 @@ void    *manage_print(t_philo *philo, int action)
     else if (action == 3)
 	    printf("%lld philo %d is sleeping\n",gettime() \
 		- philo->data->start, philo->id);
-    else if (action == 4)
+	else if (action == 4)
 	    printf("%lld philo %d is thinking\n",gettime() \
 		- philo->data->start, philo->id);
-	pthread_mutex_unlock(&philo->data->saba);
-    return(NULL);
+    return(pthread_mutex_unlock(&philo->data->saba), NULL);
     
 }
 
@@ -47,4 +44,6 @@ void manage_errors(int c)
 		ft_putendl_fd("invalid args", 2);
 	if(c == 2)
 		ft_putendl_fd("thread creation failed", 2);
+	if(c == 3)
+		ft_putendl_fd("mutex failed", 2);
 }

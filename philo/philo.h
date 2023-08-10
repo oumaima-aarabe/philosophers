@@ -37,6 +37,7 @@ typedef struct s_philo
 	pthread_mutex_t	*r_fork;
 	long long		current_time;
 	long long		deadline;
+	bool			eet;
 	int				meals_c;
 	pthread_t		thread;
 	t_data			*data;
@@ -63,7 +64,7 @@ int		ft_strlen(char *s);
 void	ft_putendl_fd(char *s, int fd);
 int	ft_atoi(char *str);
 int	init_data(int ac, char **av, t_data *data);
-int	init_philo(t_data *data, t_philo *ph);
+int	init_philo(t_data *data, t_philo *ph, int *i);
 /****************************************************************/
 
 #endif
