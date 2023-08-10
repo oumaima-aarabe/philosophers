@@ -3,7 +3,9 @@ NAME = philo
 SRC	=	main.c\
 		manage_print.c\
 		philo_init.c\
-		utils.c
+		utils.c\
+		routine.c\
+		overseer.c
 	
 OBJ	=	${SRC:.c=.o}
 

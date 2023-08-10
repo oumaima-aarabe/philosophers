@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   manage_print.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 06:17:58 by ouaarabe          #+#    #+#             */
+/*   Updated: 2023/08/10 06:20:37 by ouaarabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-long long gettime()
+long long	gettime(void)
 {
 	struct timeval	t;
 
@@ -11,39 +23,39 @@ long long gettime()
 void	my_usleep(int t)
 {
 	long long	dl;
+
 	dl = gettime() + t;
-	while(gettime() < dl)
+	while (gettime() < dl)
 		usleep(100);
 }
 
-void    *manage_print(t_philo *philo, int action)
+void	*manage_print(t_philo *philo, int action)
 {
-	if(pthread_mutex_lock(&philo->data->saba))
-		return(NULL);
-    if(!philo->data->alll_alive || philo->data->all_ate)
+	if (pthread_mutex_lock(&philo->data->saba))
+		return (NULL);
+	if (!philo->data->alll_alive || philo->data->all_ate)
 		return (pthread_mutex_unlock(&philo->data->saba), "done");
-    if(action == 1)
-	    printf("%lld philo %d has taken a fork\n",gettime() \
+	if (action == 1)
+		printf("%lld philo %d has taken a fork\n", gettime() \
 		- philo->data->start, philo->id);
-    else if (action == 2)
-	    printf("%lld philo %d is eating\n",gettime() \
+	else if (action == 2)
+		printf("%lld philo %d is eating\n", gettime() \
 		- philo->data->start, philo->id);
-    else if (action == 3)
-	    printf("%lld philo %d is sleeping\n",gettime() \
+	else if (action == 3)
+		printf("%lld philo %d is sleeping\n", gettime() \
 		- philo->data->start, philo->id);
 	else if (action == 4)
-	    printf("%lld philo %d is thinking\n",gettime() \
+		printf("%lld philo %d is thinking\n", gettime() \
 		- philo->data->start, philo->id);
-    return(pthread_mutex_unlock(&philo->data->saba), NULL);
-    
+	return (pthread_mutex_unlock(&philo->data->saba), NULL);
 }
 
-void manage_errors(int c)
+void	manage_errors(int c)
 {
-	if(c == 1)
+	if (c == 1)
 		ft_putendl_fd("invalid args", 2);
-	if(c == 2)
+	if (c == 2)
 		ft_putendl_fd("thread creation failed", 2);
-	if(c == 3)
+	if (c == 3)
 		ft_putendl_fd("mutex failed", 2);
 }

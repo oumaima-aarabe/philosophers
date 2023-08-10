@@ -1,5 +1,16 @@
-#include "philo.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo_init.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 06:22:17 by ouaarabe          #+#    #+#             */
+/*   Updated: 2023/08/10 06:28:17 by ouaarabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "philo.h"
 
 int	init_data(int ac, char **av, t_data *data)
 {
@@ -17,7 +28,7 @@ int	init_data(int ac, char **av, t_data *data)
 	if (ac == 6)
 	{
 		data->nbr_meals = ft_atoi(av[5]);
-		if (data->nbr_meals == -1)
+		if (data->nbr_meals == 0)
 			return (1);
 	}
 	return (0);

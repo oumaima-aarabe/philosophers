@@ -15,7 +15,6 @@
 /****************************************************************/
 /************************STRUCTS*********************************/
 
-
 typedef struct s_data
 {
 	int				philo_sum;
@@ -46,25 +45,35 @@ typedef struct s_philo
 
 /****************************************************************/
 /************************ROUTINE_FUNCTIONS************************/
-void    *manage_print(t_philo *philo, int action);
-long long gettime();
-void	my_usleep(int t);
-void	routine(t_philo *philo);
+
+void		*manage_print(t_philo *philo, int action);
+void		routine(t_philo *philo);
+
+/****************************************************************/
+/************************OVERSEERER******************************/
+
+void		overseer(t_philo *ph);
+
 /****************************************************************/
 /************************INIT_FUNCTIONS**************************/
 
+int			init_data(int ac, char **av, t_data *data);
+int			init_philo(t_data *data, t_philo *ph, int *i);
+
 /****************************************************************/
 /************************ERROR_MANAGE_FUNCS**********************/
-void manage_errors(int c);
+
+void		manage_errors(int c);
 
 /****************************************************************/
 /************************UTILS_FUNTIONS**************************/
 
-int		ft_strlen(char *s);
-void	ft_putendl_fd(char *s, int fd);
-int	ft_atoi(char *str);
-int	init_data(int ac, char **av, t_data *data);
-int	init_philo(t_data *data, t_philo *ph, int *i);
+int			ft_strlen(char *s);
+void		ft_putendl_fd(char *s, int fd);
+long long 	gettime();
+void		my_usleep(int t);
+int			ft_atoi(char *str);
+
 /****************************************************************/
 
 #endif
