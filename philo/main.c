@@ -6,16 +6,16 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 05:15:49 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:33:16 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/10 06:39:32 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	t_data data;
-	int i;
+	t_data	data;
+	int		i;
 	t_philo	ph[200];
 
 	if (init_data(ac, av, &data))
@@ -32,7 +32,6 @@ int main(int ac, char **av)
 	i = -1;
 	while (++i < data.philo_sum)
 		pthread_join(ph[i].thread, NULL);
-	
 	i = -1;
 	pthread_mutex_destroy(&data.saba);
 	while (++i < data.philo_sum)

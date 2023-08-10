@@ -1,16 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/10 06:50:24 by ouaarabe          #+#    #+#             */
+/*   Updated: 2023/08/10 06:50:45 by ouaarabe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
 /************************INCLUDES********************************/
 
-#include <pthread.h>
-#include <string.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <sys/time.h>
-#include <stdbool.h>
-#include <limits.h>
+# include <pthread.h>
+# include <string.h>
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <sys/time.h>
+# include <stdbool.h>
+# include <limits.h>
 
 /****************************************************************/
 /************************STRUCTS*********************************/
@@ -70,7 +82,7 @@ void		manage_errors(int c);
 
 int			ft_strlen(char *s);
 void		ft_putendl_fd(char *s, int fd);
-long long 	gettime();
+long long	gettime(void);
 void		my_usleep(int t);
 int			ft_atoi(char *str);
 

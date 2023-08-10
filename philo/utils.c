@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:20:50 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:27:10 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/10 06:49:57 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int	ft_strlen(char *s)
 {
 	char	*c;
-	
-	if(!s)
+
+	if (!s)
 		return (0);
 	c = s;
 	while (*c)
@@ -37,7 +37,6 @@ int	ft_isdigit(int c)
 	return (c >= '0' && c <= '9');
 }
 
-
 int	ft_atoi(char *str)
 {
 	long	nbr;
@@ -48,7 +47,7 @@ int	ft_atoi(char *str)
 	nbr = 0;
 	i = 0;
 	while ((str[i] == ' ') || (str[i] > 7 && str[i] < 14))
-			i++;
+		i++;
 	if ((str[i] == '-') || (str[i] == '+'))
 	{
 		if (str[i] == '-')
@@ -60,7 +59,7 @@ int	ft_atoi(char *str)
 		nbr = nbr * 10 + (str[i] - 48);
 		i++;
 	}
-	if(str[i])
-		return(0);
+	if (str[i])
+		return (0);
 	return (sign * nbr);
 }

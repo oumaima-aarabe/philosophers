@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:22:17 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:28:17 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/10 06:45:36 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,9 @@ int	init_data(int ac, char **av, t_data *data)
 	return (0);
 }
 
-
 void	init_forks(t_philo *ph, t_data data)
 {
-	int i;
+	int	i;
 
 	ph[0].r_fork = &ph[data.philo_sum - 1].l_fork;
 	i = 0;
@@ -53,9 +52,9 @@ int	init_philo(t_data *data, t_philo *ph, int *i)
 	*i = 0;
 	while (*i < data->philo_sum)
 		if (pthread_mutex_init(&ph[(*i)++].l_fork, NULL))
-			return(1);
+			return (1);
 	init_forks(ph, *data);
-	data->start  = gettime();
+	data->start = gettime();
 	*i = -1;
 	while (++(*i) < data->philo_sum)
 	{
@@ -64,8 +63,8 @@ int	init_philo(t_data *data, t_philo *ph, int *i)
 		ph[*i].data = data;
 		ph[*i].id = *i + 1;
 		ph[*i].eet = false;
-		if(pthread_create(&ph[*i].thread, NULL, (void *)routine, &ph[*i]))
-			return(*i = data->philo_sum, 1);
+		if (pthread_create(&ph[*i].thread, NULL, (void *)routine, &ph[*i]))
+			return (*i = data->philo_sum, 1);
 		usleep(100);
 	}
 	return (0);
