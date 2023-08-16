@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:30:53 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:48:59 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 04:43:16 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	routine(t_philo *philo)
 	pthread_mutex_unlock(&philo->data->saba);
 	if (!((philo->id) % 2))
 		my_usleep(philo->data->t2_eat);
-	while ("ghayboba")
+	while (2307)
 	{
 		if (!death_check_var(philo) || mcc_var(philo))
 			break ;

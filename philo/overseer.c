@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:32:29 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:44:07 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 04:43:16 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	overseer(t_philo *ph)
 	i = 0;
 	status = 0;
 	sum = ph[0].data->philo_sum;
-	while ("ghayboba")
+	while (2307)
 	{
 		i = 0;
 		start = gettime();
