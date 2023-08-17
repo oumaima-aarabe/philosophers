@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:32:29 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/16 04:43:16 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 08:46:41 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	death_check(t_philo *ph, long long start)
 		return (0);
 	if (!ph->data->alll_alive)
 		return (pthread_mutex_unlock(&ph->data->saba), 0);
-	usleep(1);
 	if (!ph->eet && start > ph->deadline)
 	{
 		status = 0;

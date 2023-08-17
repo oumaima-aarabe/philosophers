@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:20:50 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:49:57 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 05:54:20 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	ft_atoi(char *str)
 	if ((str[i] == '-') || (str[i] == '+'))
 	{
 		if (str[i] == '-')
-			sign *= -1;
+			return (0);
 		i++;
 	}
 	while (str[i] && ft_isdigit(str[i]))

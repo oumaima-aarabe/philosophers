@@ -6,26 +6,17 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:30:53 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/16 04:43:16 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 08:48:42 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	mcc_var(t_philo *ph)
-{
-	if (pthread_mutex_lock(&ph->data->saba))
-		return (1);
-	if (ph->data->all_ate)
-		return (pthread_mutex_unlock(&ph->data->saba), 1);
-	return (pthread_mutex_unlock(&ph->data->saba), 0);
-}
-
-int	death_check_var(t_philo *ph)
+int	status_check_var(t_philo *ph)
 {
 	if (pthread_mutex_lock(&ph->data->saba))
 		return (0);
-	if (!ph->data->alll_alive)
+	if (!ph->data->alll_alive || ph->data->all_ate)
 		return (pthread_mutex_unlock(&ph->data->saba), 0);
 	return (pthread_mutex_unlock(&ph->data->saba), 1);
 }
@@ -50,13 +41,14 @@ void	*ham_ham(t_philo *philo)
 	if (pthread_mutex_lock(&philo->l_fork))
 		return (NULL);
 	if (manage_print(philo, 1))
-		return ("done");
+		return (pthread_mutex_unlock(&philo->l_fork), "done");
 	if (philo->data->philo_sum == 1)
 		return (pthread_mutex_unlock(&philo->l_fork), "done");
 	if (pthread_mutex_lock(philo->r_fork))
-		return (NULL);
+		return (pthread_mutex_unlock(&philo->l_fork), NULL);
 	if (manage_print(philo, 1))
-		return ("done");
+		return (pthread_mutex_unlock(&philo->l_fork), \
+		pthread_mutex_unlock(philo->r_fork), "done");
 	update_data(philo);
 	if (manage_print(philo, 2))
 		return ("done");
@@ -75,15 +67,11 @@ void	*ham_ham(t_philo *philo)
 
 void	routine(t_philo *philo)
 {
-	if (pthread_mutex_lock(&philo->data->saba))
-		return ;
-	philo->deadline = gettime() + philo->data->t2_die;
-	pthread_mutex_unlock(&philo->data->saba);
 	if (!((philo->id) % 2))
 		my_usleep(philo->data->t2_eat);
 	while (2307)
 	{
-		if (!death_check_var(philo) || mcc_var(philo))
+		if (!status_check_var(philo))
 			break ;
 		if (ham_ham(philo))
 			return ;

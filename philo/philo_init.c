@@ -6,7 +6,7 @@
 /*   By: ouaarabe <ouaarabe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/10 06:22:17 by ouaarabe          #+#    #+#             */
-/*   Updated: 2023/08/10 06:45:36 by ouaarabe         ###   ########.fr       */
+/*   Updated: 2023/08/16 08:57:16 by ouaarabe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,10 @@ int	init_data(int ac, char **av, t_data *data)
 	data->t2_die = ft_atoi(av[2]);
 	data->t2_eat = ft_atoi(av[3]);
 	data->t2_sleep = ft_atoi(av[4]);
-	if (!data->philo_sum || !data->t2_die || !data->t2_eat ||!data->t2_sleep)
+	if (!data->philo_sum)
+		return (1);
+	if (data->philo_sum > 200 || data->t2_die < 60 || \
+	data->t2_eat < 60 || data->t2_sleep < 60)
 		return (1);
 	data->nbr_meals = -1;
 	data->alll_alive = 1;
@@ -63,9 +66,9 @@ int	init_philo(t_data *data, t_philo *ph, int *i)
 		ph[*i].data = data;
 		ph[*i].id = *i + 1;
 		ph[*i].eet = false;
+		ph[*i].deadline = gettime() + data->t2_die;
 		if (pthread_create(&ph[*i].thread, NULL, (void *)routine, &ph[*i]))
 			return (*i = data->philo_sum, 1);
-		usleep(100);
 	}
 	return (0);
 }
