@@ -15,6 +15,6 @@ The Dining Philosophers Problem is a well-known problem in computer science and 
 
 ### USAGE
    ```bash
-   git clone https://github.com/your_username/dining-philosophers.git
+   git clone git@github.com:oumaima-aarabe/philosophers.git
    make
    ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
